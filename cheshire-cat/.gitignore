@@ -1,0 +1,19 @@
+__pycache__
+.env
+*mypy_cache
+
+# python local dev
+core/venv
+
+.DS_Store
+.idea
+
+# DBs
+long_term_memory
+*metadata.db
+*metadata-v*.db
+
+# plugins are not tracked by git
+#core/cat/plugins/*
+# plugins readme can stay
+!core/cat/plugins/how-to-write-a-plugin.md
