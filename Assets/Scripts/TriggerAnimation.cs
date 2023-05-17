@@ -26,14 +26,9 @@ public class TriggerAnimation : MonoBehaviour
             animator.SetTrigger("SleepStart");
             _script._catMessage.sentiment = null;
         }
-        else if (_script._catMessage.sentiment == "magic")
-        {
-            animator.SetTrigger("Spell");
-            _script._catMessage.sentiment = null;
-        }
         else if (_script._catMessage.sentiment == "joy")
         {
-            animator.SetTrigger("Fly");
+            animator.SetTrigger("Jump");
             _script._catMessage.sentiment = null;
         }
     }
