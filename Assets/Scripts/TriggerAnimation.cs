@@ -1,26 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class TriggerAnimation : MonoBehaviour
 {
     private ChatClient _script;
-
     private string _sentiment;
     public Animator animator;
-    // Start is called before the first frame update
+    
     void Start()
     {
+        // Get the other script component attached to the same GameObject as this script
         _script = GetComponent<ChatClient>();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
+        // Check the sentiment label stored in the received message and use it to trigger predefined animations
         if (_script._catMessage.sentiment == "rude")
         {
             animator.SetTrigger("Damage");
+            // Reset the sentiment value after triggering the animation
             _script._catMessage.sentiment = null;
         }
         else if (_script._catMessage.sentiment == "sleep")

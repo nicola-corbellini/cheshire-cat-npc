@@ -1,12 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using WebSocketSharp;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using UnityEditor.PackageManager;
 
 
 public class ChatClient : MonoBehaviour
@@ -16,10 +11,14 @@ public class ChatClient : MonoBehaviour
 
     // Define a custom class exposing a public property called "text".
     // This is necessary as the JsonUtility.ToJson method only converts public properties
+    // and the Cat server expects the message to be formatted as a value of the "text" key.
     private class Message {
         public string text;
     }
     
+    // Define a custom class that we'll use to store the Cat's answer received from the server.
+    // The incoming JSON has many keys we are not interested in, so we just define two properties:
+    // the "content" with the text answer and the "sentiment" with the detected label. 
     public class CatMessage
     {
         public string content;
@@ -30,9 +29,11 @@ public class ChatClient : MonoBehaviour
 
     private void Awake()
     {
+        // Instantiate the CatMessage class as soon as the GameObject this script is attached to is instantiated.
         _catMessage = new CatMessage();
     }
-
+    
+    // Coroutine to manage the WebSocket connection
     IEnumerator Start()
     {
         // Websocket url
@@ -47,12 +48,8 @@ public class ChatClient : MonoBehaviour
         // Listener to Websocket
         _ws.OnMessage += (sender, e) =>
         {
-            // Log received data in the console
-            //Debug.Log($"Received {e.Data} from " + ((WebSocket)sender).Url + "");  
-
             // Custom function to parse the received data
             _catMessage = ParseOutput(e.Data);
-            Debug.Log(_catMessage.sentiment);
         };
         yield return 0;
     }
@@ -76,12 +73,11 @@ public class ChatClient : MonoBehaviour
         catChat.text = _catMessage.content;
     }
     
-    /// <summary>
-    /// Since the received text is a string representation of a JSON with a known structure,
-    /// we can split the string between two keys of interest.
-    /// </summary>
+
     private CatMessage ParseOutput(string message)
     {
+        // Here is a custom function to parse the received text from the server.
+        // We parse it as a JSON structered text and preserve only the two properties of CatMessage we defined above 
         _catMessage = JsonUtility.FromJson<CatMessage>(message);
 
         return _catMessage;
